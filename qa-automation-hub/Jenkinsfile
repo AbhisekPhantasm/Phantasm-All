@@ -68,7 +68,7 @@ export TAGS="${params.TAGS}"
 export PW_WORKERS="${params.PW_WORKERS}"
 export SHARD_INDEX="${params.SHARD_INDEX}"
 export SHARD_TOTAL="${params.SHARD_TOTAL}"
-export HEADED="$([[ "${params.HEADED}" == "true" ]] && echo 1 || echo 0)"
+export HEADED="${params.HEADED == true || params.HEADED == 'true' ? '1' : '0'}"
 bash scripts/run-project.sh
 """)
           }
