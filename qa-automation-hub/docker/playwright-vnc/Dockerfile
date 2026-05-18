@@ -14,7 +14,9 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 COPY docker/playwright-vnc/entrypoint.sh /usr/local/bin/qa-vnc-entrypoint.sh
-RUN chmod +x /usr/local/bin/qa-vnc-entrypoint.sh
+# Strip Windows CRLF in case the file gets checked out with autocrlf=true.
+RUN sed -i 's/\r$//' /usr/local/bin/qa-vnc-entrypoint.sh \
+ && chmod +x /usr/local/bin/qa-vnc-entrypoint.sh
 
 ENV DISPLAY=:99
 

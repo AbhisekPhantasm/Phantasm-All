@@ -1,12 +1,25 @@
 #!/usr/bin/env groovy
 /* groovylint-disable CompileStatic, UnnecessaryGetter */
-// Scripted pipeline: SCM at Phantasm root (qa-automation-hub/ + sibling projects) OR hub-only checkout.
+// Scripted pipeline. Runs Playwright directly on the Jenkins controller
+// (the controller image ships Node 20 + Playwright system deps). No
+// docker.inside / DinD: with named-volume jenkins_home, host bind-mounts
+// of the workspace are impossible and were the source of empty-workspace
+// "directory not found" failures during the run stages.
+//
+// Required Jenkins job config:
+//   SCM: https://github.com/AbhisekPhantasm/Phantasm-All.git
+//   Branch: master (or your default)
+//   Script Path: qa-automation-hub/Jenkinsfile
+// (SCM must be the whole Phantasm-All repo so sibling project dirs exist;
+//  qa-automation-hub-only checkout will fail registry validation.)
 
 def hubDir() {
-  return fileExists('qa-automation-hub/package.json') ? 'qa-automation-hub' : '.'
+  if (fileExists('qa-automation-hub/package.json')) { return 'qa-automation-hub' }
+  if (fileExists('package.json') && fileExists('tooling/projects.registry.json')) { return '.' }
+  error('Cannot locate qa-automation-hub: expected qa-automation-hub/ at workspace root, or run inside the hub itself.')
 }
 
-def allProjectIds() {
+def fallbackProjectIds() {
   return [
     'example-acme-ui',
     'amipro-simpor-b2c',
@@ -18,23 +31,24 @@ def allProjectIds() {
     'sabeeltv',
     'sacred-journey',
     'ushodaya',
-  ].join('\n')
+  ]
 }
 
-properties([
-  parameters([
-    choice(name: 'PROJECT_ID', choices: allProjectIds(), description: 'Must exist in tooling/projects.registry.json'),
-    choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'].join('\n')),
-    choice(name: 'BROWSER', choices: ['chromium', 'firefox', 'webkit'].join('\n')),
-    string(name: 'TAGS', defaultValue: '', trim: true),
-    booleanParam(name: 'HEADED', defaultValue: false),
-    string(name: 'PW_WORKERS', defaultValue: '4', trim: true),
-    string(name: 'SHARD_INDEX', defaultValue: '', trim: true),
-    string(name: 'SHARD_TOTAL', defaultValue: '', trim: true),
-  ]),
-])
+def projectIdChoices(String hub) {
+  try {
+    def regPath = hub == '.' ? 'tooling/projects.registry.json' : "${hub}/tooling/projects.registry.json"
+    if (fileExists(regPath)) {
+      def reg = readJSON(file: regPath)
+      def ids = reg.projects.collect { it.id as String }
+      if (ids) { return ids }
+    }
+  } catch (err) {
+    echo "WARN: could not read registry for parameter choices: ${err}"
+  }
+  return fallbackProjectIds()
+}
 
-node() {
+node {
   stage('Checkout') {
     checkout scm
   }
@@ -43,48 +57,77 @@ node() {
   env.HUB_DIR = hub
   env.PHANTASM_MONO_ROOT = pwd()
 
-  def dockerfile = "${hub}/docker/playwright-runner/Dockerfile"
-  def image = docker.build("qa-hub/playwright-runner:${env.BUILD_NUMBER}", "-f ${dockerfile} ${hub}")
+  // Refresh parameter definitions from the registry. Takes effect from the
+  // NEXT build (Jenkins quirk); the current build uses whatever parameters
+  // were registered previously, or the static fallback on first run.
+  def ids = projectIdChoices(hub)
+  properties([
+    parameters([
+      choice(name: 'PROJECT_ID', choices: ids.join('\n'),
+             description: 'Must exist in tooling/projects.registry.json'),
+      choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'].join('\n')),
+      choice(name: 'BROWSER', choices: ['chromium', 'firefox', 'webkit'].join('\n')),
+      string(name: 'TAGS', defaultValue: '', trim: true,
+             description: 'Optional Playwright --grep pattern'),
+      booleanParam(name: 'HEADED', defaultValue: false,
+                   description: 'Run with a head (X server / Xvfb required)'),
+      string(name: 'PW_WORKERS', defaultValue: '4', trim: true),
+      string(name: 'SHARD_INDEX', defaultValue: '', trim: true),
+      string(name: 'SHARD_TOTAL', defaultValue: '', trim: true),
+    ]),
+  ])
+
+  // Defaults so the first build (where params.PROJECT_ID may be null) still runs.
+  def projectId  = (params.PROJECT_ID ?: ids[0]) as String
+  def environ    = (params.ENVIRONMENT ?: 'dev') as String
+  def browserId  = (params.BROWSER ?: 'chromium') as String
+  def tags       = (params.TAGS ?: '') as String
+  def pwWorkers  = (params.PW_WORKERS ?: '4') as String
+  def shardIdx   = (params.SHARD_INDEX ?: '') as String
+  def shardTotal = (params.SHARD_TOTAL ?: '') as String
+  def headed     = params.HEADED ? '1' : '0'
+
+  echo "Resolved parameters: PROJECT_ID=${projectId} ENVIRONMENT=${environ} BROWSER=${browserId} HEADED=${headed}"
 
   def testRc = null
   Throwable pipelineError = null
 
   try {
-    try {
-      image.inside {
-        dir(hub) {
-          stage('Validate registry') {
-            sh 'node tooling/validate-registry.mjs'
-          }
-
-          stage('Run Playwright (hub script)') {
-            testRc = sh(returnStatus: true, script: """#!/usr/bin/env bash
+    dir(hub) {
+      stage('Validate registry') {
+        sh """#!/usr/bin/env bash
 set -euo pipefail
 export PHANTASM_MONO_ROOT="${env.PHANTASM_MONO_ROOT}"
-export PROJECT_ID="${params.PROJECT_ID}"
-export ENVIRONMENT="${params.ENVIRONMENT}"
-export BROWSER="${params.BROWSER}"
-export TAGS="${params.TAGS}"
-export PW_WORKERS="${params.PW_WORKERS}"
-export SHARD_INDEX="${params.SHARD_INDEX}"
-export SHARD_TOTAL="${params.SHARD_TOTAL}"
-export HEADED="${params.HEADED == true || params.HEADED == 'true' ? '1' : '0'}"
+node tooling/validate-registry.mjs
+"""
+      }
+
+      stage('Run Playwright') {
+        testRc = sh(returnStatus: true, script: """#!/usr/bin/env bash
+set -euo pipefail
+export PHANTASM_MONO_ROOT="${env.PHANTASM_MONO_ROOT}"
+export PROJECT_ID="${projectId}"
+export ENVIRONMENT="${environ}"
+export BROWSER="${browserId}"
+export TAGS="${tags}"
+export PW_WORKERS="${pwWorkers}"
+export SHARD_INDEX="${shardIdx}"
+export SHARD_TOTAL="${shardTotal}"
+export HEADED="${headed}"
 bash scripts/run-project.sh
 """)
-          }
-        }
       }
-    } catch (Throwable t) {
-      pipelineError = t
     }
+  } catch (Throwable t) {
+    pipelineError = t
   } finally {
     dir(hub) {
       stage('Collect artifacts') {
         sh """#!/usr/bin/env bash
 set -euo pipefail
-export PROJECT_ID="${params.PROJECT_ID}"
+export PROJECT_ID="${projectId}"
 export BUILD_TAG="${env.BUILD_TAG}"
-bash scripts/collect-artifacts.sh
+bash scripts/collect-artifacts.sh || echo "collect-artifacts: non-fatal failure"
 """
       }
 
@@ -102,7 +145,9 @@ bash scripts/collect-artifacts.sh
                 results: [[path: "${env.LAST_PROJECT_PATH}/allure-results"]],
               ])
             } catch (err) {
-              echo "Allure publish skipped/failed: ${err}"
+              // Allure plugin needs the "Allure Commandline" tool configured
+              // under Manage Jenkins > Tools. Without it this step throws.
+              echo "Allure publish skipped: ${err.message ?: err}"
             }
           }
         } else {
@@ -111,30 +156,33 @@ bash scripts/collect-artifacts.sh
       }
 
       stage('Archive') {
-        archiveArtifacts artifacts: 'artifacts/**,qa-hub-last-run.env', fingerprint: true, allowEmptyArchive: true
+        archiveArtifacts(
+          artifacts: 'artifacts/**,qa-hub-last-run.env',
+          fingerprint: true,
+          allowEmptyArchive: true,
+        )
       }
     }
 
     if (env.SLACK_WEBHOOK_URL?.trim()) {
       dir(hub) {
+        def msg
         if (testRc == null) {
-          sh """#!/usr/bin/env bash
-set -euo pipefail
-export MESSAGE="❌ ${env.JOB_NAME} #${env.BUILD_NUMBER} FAILED (before Playwright run) (${params.PROJECT_ID})"
-bash scripts/notify-slack.sh
-"""
+          msg = "[X] ${env.JOB_NAME} #${env.BUILD_NUMBER} FAILED before Playwright (${projectId})"
         } else if (testRc == 0) {
-          sh """#!/usr/bin/env bash
-set -euo pipefail
-export MESSAGE="✅ ${env.JOB_NAME} #${env.BUILD_NUMBER} SUCCESS (${params.PROJECT_ID})"
-bash scripts/notify-slack.sh
-"""
+          msg = "[OK] ${env.JOB_NAME} #${env.BUILD_NUMBER} SUCCESS (${projectId})"
         } else {
-          sh """#!/usr/bin/env bash
+          msg = "[X] ${env.JOB_NAME} #${env.BUILD_NUMBER} FAILED rc=${testRc} (${projectId})"
+        }
+        try {
+          withEnv(["MESSAGE=${msg}"]) {
+            sh '''#!/usr/bin/env bash
 set -euo pipefail
-export MESSAGE="❌ ${env.JOB_NAME} #${env.BUILD_NUMBER} FAILED (${params.PROJECT_ID})"
 bash scripts/notify-slack.sh
-"""
+'''
+          }
+        } catch (err) {
+          echo "Slack notify skipped: ${err.message ?: err}"
         }
       }
     }
@@ -143,7 +191,6 @@ bash scripts/notify-slack.sh
       currentBuild.result = 'FAILURE'
       error("Playwright exited with code ${testRc}")
     }
-
     if (pipelineError != null) {
       currentBuild.result = 'FAILURE'
       throw pipelineError

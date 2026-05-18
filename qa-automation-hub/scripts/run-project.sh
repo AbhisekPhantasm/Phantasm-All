@@ -20,29 +20,36 @@ if [[ -z "${PHANTASM_MONO_ROOT:-}" ]]; then
 fi
 
 if [[ ! -f tooling/projects.registry.json ]]; then
-  echo "Missing tooling/projects.registry.json"
+  echo "ERROR: tooling/projects.registry.json not found in ${ROOT_DIR}"
   exit 1
 fi
 
-PROJECT_PATH="$(PHANTASM_MONO_ROOT="${PHANTASM_MONO_ROOT}" PROJECT_ID="${PROJECT_ID}" ENVIRONMENT="${ENVIRONMENT}" node --input-type=module -e "
+# Resolve the project's repo path from the registry. We do this in Node so
+# the registry schema stays single-source-of-truth.
+RESOLVED="$(PHANTASM_MONO_ROOT="${PHANTASM_MONO_ROOT}" PROJECT_ID="${PROJECT_ID}" ENVIRONMENT="${ENVIRONMENT}" node --input-type=module -e "
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 const mono = process.env.PHANTASM_MONO_ROOT;
 const r = JSON.parse(readFileSync('tooling/projects.registry.json','utf8'));
 const p = r.projects.find(x => x.id === process.env.PROJECT_ID);
-if (!p) { console.error('Unknown PROJECT_ID'); process.exit(2); }
+if (!p) { console.error('Unknown PROJECT_ID: ' + process.env.PROJECT_ID); process.exit(2); }
 const env = r.environments.find(e => e.id === (process.env.ENVIRONMENT || 'dev'));
-if (!env) { console.error('Unknown ENVIRONMENT'); process.exit(3); }
+if (!env) { console.error('Unknown ENVIRONMENT: ' + process.env.ENVIRONMENT); process.exit(3); }
 console.log(resolve(mono, p.repoPath));
-")"
-
-ENV_BASE_URL="$(node --input-type=module -e "
-import { readFileSync } from 'node:fs';
-const r = JSON.parse(readFileSync('tooling/projects.registry.json','utf8'));
-const env = r.environments.find(e => e.id === (process.env.ENVIRONMENT || 'dev'));
-if (!env) process.exit(3);
 console.log(env.baseUrl);
 ")"
+
+PROJECT_PATH="$(printf '%s\n' "${RESOLVED}" | sed -n '1p')"
+ENV_BASE_URL="$(printf '%s\n' "${RESOLVED}" | sed -n '2p')"
+
+if [[ ! -d "${PROJECT_PATH}" ]]; then
+  echo "ERROR: project path does not exist: ${PROJECT_PATH}"
+  echo "       PHANTASM_MONO_ROOT=${PHANTASM_MONO_ROOT}"
+  echo "       Hint: the Jenkins job's SCM must check out the full Phantasm-All"
+  echo "       repo (not just qa-automation-hub), so sibling project directories"
+  echo "       are present at \${PHANTASM_MONO_ROOT}/<repoPath>."
+  exit 4
+fi
 
 export PROJECT_PATH
 export BASE_URL="${BASE_URL:-$ENV_BASE_URL}"
@@ -59,7 +66,13 @@ echo "PROJECT_PATH=${PROJECT_PATH}"
 echo "BASE_URL=${BASE_URL}"
 echo "BROWSER=${BROWSER} HEADED=${HEADED}"
 
-if [[ -f package-lock.json ]]; then npm ci; else npm install; fi
+# Hub-level install (only needed when the hub itself has dependencies to pull,
+# e.g. for shared packages used by example-acme-ui).
+if [[ -f package-lock.json ]]; then
+  npm ci --no-audit --no-fund
+else
+  npm install --no-audit --no-fund
+fi
 
 # Shared hub packages are only required for in-hub template projects using @qa-hub/*
 if [[ "${PROJECT_ID}" == "example-acme-ui" ]]; then
@@ -68,13 +81,19 @@ fi
 
 pushd "${PROJECT_PATH}" >/dev/null
 
-if [[ -f package-lock.json ]]; then npm ci; else npm install; fi
-
-# Official Playwright Docker images ship browsers for a pinned version; skip redundant downloads when requested.
-if [[ "${PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD:-}" == "1" ]]; then
-  echo "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 — skipping playwright install"
+if [[ -f package-lock.json ]]; then
+  npm ci --no-audit --no-fund
 else
-  npx playwright install --with-deps
+  npm install --no-audit --no-fund
+fi
+
+# Browsers: cached under PLAYWRIGHT_BROWSERS_PATH (set in the Jenkins image to
+# /var/jenkins_home/.cache/ms-playwright) so they survive container restarts.
+# System deps are baked into the controller image, so we skip --with-deps here.
+if [[ "${PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD:-}" == "1" ]]; then
+  echo "PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 - skipping playwright install"
+else
+  npx playwright install "${BROWSER}"
 fi
 
 PLAYWRIGHT_ARGS=(test --pass-with-no-tests)
@@ -94,7 +113,9 @@ set -e
 
 popd >/dev/null
 
-echo "PROJECT_PATH=${PROJECT_PATH}" > qa-hub-last-run.env
-echo "EXIT_CODE=${EXIT_CODE}" >> qa-hub-last-run.env
+{
+  echo "PROJECT_PATH=${PROJECT_PATH}"
+  echo "EXIT_CODE=${EXIT_CODE}"
+} > qa-hub-last-run.env
 
 exit "${EXIT_CODE}"

@@ -1,12 +1,27 @@
+# Core Pipeline DSL (was missing - root cause of "plugin errors" on a fresh
+# LTS image). workflow-aggregator pulls in workflow-job, workflow-cps,
+# workflow-basic-steps, workflow-durable-task-step, etc.
+workflow-aggregator:latest
+pipeline-stage-view:latest
+pipeline-utility-steps:latest
+pipeline-graph-view:latest
+pipeline-groovy-lib:latest
+
+# SCM
+git:latest
+git-client:latest
+
+# Reporting / artifacts
 allure-jenkins-plugin:latest
+junit:latest
+htmlpublisher:latest
+
+# Misc essentials
 ant:latest
 build-timeout:latest
 credentials-binding:latest
 docker-workflow:latest
 email-ext:latest
-git:latest
-pipeline-stage-view:latest
-pipeline-utility-steps:latest
 ssh-agent:latest
 timestamper:latest
 ws-cleanup:latest
