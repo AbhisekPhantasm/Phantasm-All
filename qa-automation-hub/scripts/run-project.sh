@@ -98,6 +98,12 @@ fi
 
 PLAYWRIGHT_ARGS=(test --pass-with-no-tests)
 
+# CLI overrides config. Some project configs (e.g. Elitekem) don't read
+# process.env.HEADED at all, so the env var alone isn't enough.
+if [[ "${HEADED:-0}" == "1" ]]; then
+  PLAYWRIGHT_ARGS+=(--headed)
+fi
+
 if [[ -n "${TAGS:-}" ]]; then
   PLAYWRIGHT_ARGS+=(--grep "${TAGS}")
 fi
