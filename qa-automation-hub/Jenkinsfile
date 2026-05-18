@@ -102,9 +102,18 @@ node tooling/validate-registry.mjs
 """
       }
 
+      if (headed == '1') {
+        stage('Start virtual display') {
+          sh 'bash scripts/start-display.sh'
+          echo 'Watch the browser at: http://localhost:6080/vnc.html'
+        }
+      }
+
       stage('Run Playwright') {
+        def displayExport = headed == '1' ? 'export DISPLAY=":99"' : '# headless run'
         testRc = sh(returnStatus: true, script: """#!/usr/bin/env bash
 set -euo pipefail
+${displayExport}
 export PHANTASM_MONO_ROOT="${env.PHANTASM_MONO_ROOT}"
 export PROJECT_ID="${projectId}"
 export ENVIRONMENT="${environ}"
@@ -121,6 +130,14 @@ bash scripts/run-project.sh
   } catch (Throwable t) {
     pipelineError = t
   } finally {
+    if (headed == '1') {
+      dir(hub) {
+        stage('Stop virtual display') {
+          sh 'bash scripts/stop-display.sh || true'
+        }
+      }
+    }
+
     dir(hub) {
       stage('Collect artifacts') {
         sh """#!/usr/bin/env bash

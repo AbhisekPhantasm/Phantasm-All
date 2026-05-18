@@ -10,6 +10,11 @@ services:
     ports:
       - "8080:8080"
       - "50000:50000"
+      # noVNC + raw VNC for HEADED Playwright runs. The Jenkinsfile starts
+      # Xvfb + x11vnc + noVNC on demand when the HEADED parameter is set.
+      # Watch the browser at http://localhost:6080/vnc.html
+      - "127.0.0.1:6080:6080"
+      - "127.0.0.1:5900:5900"
     environment:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=false -Xmx2048m"
       # Optional: pre-seed admin user via CasC in production (not enabled in this sample).
@@ -46,16 +51,19 @@ services:
     volumes:
       - ../:/mono
 
-  # Headed Playwright + Xvfb + noVNC. Starts with default `docker compose up` alongside Jenkins.
-  # Viewer: http://127.0.0.1:6080/vnc.html  (or http://127.0.0.1:6080/novnc/vnc.html)
+  # Standalone Playwright + Xvfb + noVNC for ad-hoc local runs (no Jenkins).
+  # Gated behind the "vnc-standalone" profile so it does NOT auto-start - the
+  # Jenkins controller now ships its own VNC stack on the same 6080/5900 ports.
+  # Bring this up explicitly: docker compose --profile vnc-standalone up -d
+  # Viewer: http://127.0.0.1:6080/vnc.html
   # One project: docker compose exec playwright-vnc bash -lc "cd /mono/qa-automation-hub && PHANTASM_MONO_ROOT=/mono HEADED=1 PROJECT_ID=flavor-boys bash scripts/run-project.sh"
-  # All projects (host): bash scripts/run-all-projects-vnc.sh  |  PowerShell: .\scripts\run-all-projects-vnc.ps1
   playwright-vnc:
     build:
       context: .
       dockerfile: docker/playwright-vnc/Dockerfile
     image: qa-hub/playwright-vnc:1.59.1
     container_name: qa-hub-playwright-vnc
+    profiles: ["vnc-standalone"]
     ports:
       - "127.0.0.1:6080:6080"
       - "127.0.0.1:5900:5900"
