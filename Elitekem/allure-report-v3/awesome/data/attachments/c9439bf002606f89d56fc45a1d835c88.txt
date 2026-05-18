@@ -1,0 +1,6 @@
+Step: Navigating to FAQ page
+Step: Taking screenshot after FAQ page load
+Action: Attached screenshot faq-load.png
+Step: Expanding an FAQ question
+Action: Clicked on the first FAQ summary element
+Action: Attached screenshot faq-expanded.png

@@ -1,0 +1,42 @@
+CLASS: gt3-core-imagebox-title TEXT: DESIGN
+CLASS: gt3-core-imagebox-title TEXT: DESIGN
+CLASS: gt3-core-imagebox-title TEXT: DEVELOPMENT
+CLASS: gt3-core-imagebox-title TEXT: DEVELOPMENT
+CLASS: gt3-core-imagebox-title TEXT: SUPPORT
+CLASS: gt3-core-imagebox-title TEXT: SUPPORT
+CLASS: elementor-heading-title elementor-size-default TEXT: Web Design & Development
+CLASS: elementor-heading-title elementor-size-default TEXT: App Design & Development
+CLASS: elementor-heading-title elementor-size-default TEXT: Graphic Designing & Video Editing
+CLASS: elementor-heading-title elementor-size-default TEXT: Marketing Strategy & SEO Campaigns
+CLASS: gt3-core-imagebox-title TEXT: <img decoding="async" width="209" height="209" src="https://phantasm.in/wp-content/uploads/2023/12/icons-05-4.png" class="attachment-full size-full wp-image-14799" alt="" srcset="https://phantasm.in/wp-content/uploads/2023/12/icons-05-4.png 209w, https://phantasm.in/wp-content/uploads/2023/12/icons-05-4-150x150.png 150w, https://phantasm.in/wp-content/uploads/2023/12/icons-05-4-50x50.png 50w, https://phantasm.in/wp-content/uploads/2023/12/icons-05-4-100x100.png 100w" sizes="(max-width: 209px) 100vw, 209px" title="icons-05" /><img decoding="async" width="209" height="209" src="https://phantasm.in/wp-content/uploads/2023/12/icons-01-6.png" class="attachment-full size-full wp-image-14795" alt="" srcset="https://phantasm.in/wp-content/uploads/2023/12/icons-01-6.png 209w, https://phantasm.in/wp-content/uploads/2023/12/icons-01-6-150x150.png 150w, https://phantasm.in/wp-content/uploads/2023/12/icons-01-6-50x50.png 50w, https://phantasm.in/wp-content/uploads/2023/12/icons-01-6-100x100.png 100w" sizes="(max-width: 209px) 100vw, 209px" title="icons-01" />Web Design & Development
+CLASS: gt3-core-imagebox-title TEXT: Web Design & Development
+CLASS: gt3-core-imagebox-title TEXT: <img decoding="async" width="209" height="209" src="https://phantasm.in/wp-content/uploads/2023/12/icons-06-4.png" class="attachment-full size-full wp-image-14800" alt="" srcset="https://phantasm.in/wp-content/uploads/2023/12/icons-06-4.png 209w, https://phantasm.in/wp-content/uploads/2023/12/icons-06-4-150x150.png 150w, https://phantasm.in/wp-content/uploads/2023/12/icons-06-4-50x50.png 50w, https://phantasm.in/wp-content/uploads/2023/12/icons-06-4-100x100.png 100w" sizes="(max-width: 209px) 100vw, 209px" title="icons-06" /><img decoding="async" width="209" height="209" src="https://phantasm.in/wp-content/uploads/2023/12/icons-02-5.png" class="attachment-full size-full wp-image-14796" alt="" srcset="https://phantasm.in/wp-content/uploads/2023/12/icons-02-5.png 209w, https://phantasm.in/wp-content/uploads/2023/12/icons-02-5-150x150.png 150w, https://phantasm.in/wp-content/uploads/2023/12/icons-02-5-50x50.png 50w, https://phantasm.in/wp-content/uploads/2023/12/icons-02-5-100x100.png 100w" sizes="(max-width: 209px) 100vw, 209px" title="icons-02" />App Design & Development
+CLASS: gt3-core-imagebox-title TEXT: App Design & Development
+CLASS: gt3-core-imagebox-title TEXT: <img decoding="async" width="209" height="209" src="https://phantasm.in/wp-content/uploads/2023/12/icons-07-5.png" class="attachment-full size-full wp-image-14793" alt="" srcset="https://phantasm.in/wp-content/uploads/2023/12/icons-07-5.png 209w, https://phantasm.in/wp-content/uploads/2023/12/icons-07-5-150x150.png 150w, https://phantasm.in/wp-content/uploads/2023/12/icons-07-5-50x50.png 50w, https://phantasm.in/wp-content/uploads/2023/12/icons-07-5-100x100.png 100w" sizes="(max-width: 209px) 100vw, 209px" title="icons-07" /><img decoding="async" width="209" height="209" src="https://phantasm.in/wp-content/uploads/2023/12/icons-03-4.png" class="attachment-full size-full wp-image-14797" alt="" srcset="https://phantasm.in/wp-content/uploads/2023/12/icons-03-4.png 209w, https://phantasm.in/wp-content/uploads/2023/12/icons-03-4-150x150.png 150w, https://phantasm.in/wp-content/uploads/2023/12/icons-03-4-50x50.png 50w, https://phantasm.in/wp-content/uploads/2023/12/icons-03-4-100x100.png 100w" sizes="(max-width: 209px) 100vw, 209px" title="icons-03" />Graphic Designing & Video Editing
+CLASS: gt3-core-imagebox-title TEXT: Graphic Designing & Video Editing
+CLASS: gt3-core-imagebox-title TEXT: <img decoding="async" width="209" height="209" src="https://phantasm.in/wp-content/uploads/2023/12/icons-08-4.png" class="attachment-full size-full wp-image-14794" alt="" srcset="https://phantasm.in/wp-content/uploads/2023/12/icons-08-4.png 209w, https://phantasm.in/wp-content/uploads/2023/12/icons-08-4-150x150.png 150w, https://phantasm.in/wp-content/uploads/2023/12/icons-08-4-50x50.png 50w, https://phantasm.in/wp-content/uploads/2023/12/icons-08-4-100x100.png 100w" sizes="(max-width: 209px) 100vw, 209px" title="icons-08" /><img decoding="async" width="209" height="209" src="https://phantasm.in/wp-content/uploads/2023/12/icons-04-4.png" class="attachment-full size-full wp-image-14798" alt="" srcset="https://phantasm.in/wp-content/uploads/2023/12/icons-04-4.png 209w, https://phantasm.in/wp-content/uploads/2023/12/icons-04-4-150x150.png 150w, https://phantasm.in/wp-content/uploads/2023/12/icons-04-4-50x50.png 50w, https://phantasm.in/wp-content/uploads/2023/12/icons-04-4-100x100.png 100w" sizes="(max-width: 209px) 100vw, 209px" title="icons-04" />Marketing Strategy & SEO Campaigns
+CLASS: gt3-core-imagebox-title TEXT: Marketing Strategy & SEO Campaigns
+CLASS: elementor-icon-box-title TEXT: Creative Approach
+CLASS: elementor-icon-box-title TEXT: Guranteed Success
+CLASS: gt3-core-imagebox-title TEXT: Trusted Partner
+CLASS: gt3-core-imagebox-title TEXT: Trusted Partner
+CLASS: gt3-core-imagebox-title TEXT: Save Your Time
+CLASS: gt3-core-imagebox-title TEXT: Save Your Time
+CLASS: gt3-core-imagebox-title TEXT: Grow Business
+CLASS: gt3-core-imagebox-title TEXT: Grow Business
+CLASS: gt3-core-imagebox-title TEXT: Support
+CLASS: gt3-core-imagebox-title TEXT: Support
+CLASS: gt3-core-imagebox-title TEXT: 
+CLASS: gt3-core-imagebox-title TEXT: 
+CLASS: gt3-core-imagebox-title TEXT: 
+CLASS: gt3-core-imagebox-title TEXT: 
+CLASS: gt3-core-imagebox-title TEXT: 
+CLASS: gt3-core-imagebox-title TEXT: 
+CLASS: gt3-core-imagebox-title TEXT: 
+CLASS: gt3-core-imagebox-title TEXT: 
+CLASS: null TEXT: 
+CLASS: null TEXT: 
+CLASS: null TEXT: 
+CLASS: null TEXT: 
+CLASS: null TEXT: Head Office
+CLASS: null TEXT: 

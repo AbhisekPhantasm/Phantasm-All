@@ -1,0 +1,35 @@
+✅ Footer is visible
+✅ Footer link "Home" navigated successfully
+✅ Footer link "About" navigated successfully
+✅ Footer link "Services" navigated successfully
+✅ Footer link "Industries We Serve" navigated successfully
+✅ Footer link "Blog" navigated successfully
+✅ Footer link "Contact Us" navigated successfully
+✅ Footer link "Products" navigated successfully
+✅ Footer link "API Intermediate Synthesis" navigated successfully
+✅ Footer link "Specialty Chemicals" navigated successfully
+✅ Footer link "CDMO Services" navigated successfully
+✅ Footer link "Peptide Synthesis" navigated successfully
+✅ Footer link "Custom Synthesis" navigated successfully
+✅ Footer link "API Impurities & Reference Standards" navigated successfully
+✅ Footer link "Privacy Policy" navigated successfully
+✅ Footer link "Terms and Conditions" navigated successfully
+✅ Quick contact validation started
+📌 Footer Heading: Quick contact
+✅ Quick contact validation passed
+📍 Address: 
+                
+                    
+                
+                Plot:6/A, Phase V, IDA, Cherlapalli, Hyderabad-500051, Telangana, India
+            
+⚠️ Email not found in footer – may only be on Contact Us page
+📞 Phone: 
+                
+                    
+                
+                +91 9384852989
+            
+✅ Contact data validation passed
+⚠️ Design credit link did not open a new tab or timed out
+✅ Footer is fully functional – all elements verified

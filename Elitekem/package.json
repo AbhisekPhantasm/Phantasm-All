@@ -1,0 +1,24 @@
+{
+  "name": "elitekem-playwright-tests",
+  "version": "1.0.0",
+  "description": "Playwright TypeScript tests for EliteKem website",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:products": "npx playwright test tests/products.spec.ts",
+    "test:industries": "npx playwright test tests/Industries.spec.ts",
+    "test:contact": "npx playwright test tests/Contact.spec.ts",
+    "report:html": "npx playwright show-report",
+    "report:allure": "npx allure generate --output allure-report allure-results && npx tsx inject-allure-styles.ts && npx allure open allure-report",
+    "allure:generate": "npx allure generate --output allure-report allure-results && npx tsx inject-allure-styles.ts",
+    "allure:open": "npx allure open allure-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.6.0",
+    "allure-commandline": "^2.38.1",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "allure-playwright": "^3.0.0"
+  }
+}

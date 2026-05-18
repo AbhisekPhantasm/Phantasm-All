@@ -1,0 +1,75 @@
+/* ============================================================
+   Allure Report – Full Width Screenshots & Videos
+   ============================================================ */
+
+/* Force all attachment images and videos to full width */
+.attachment__media,
+.attachment__media img,
+.attachment__media video,
+.attachment-viewer__media,
+.attachment-viewer__image,
+.attachment-viewer__video,
+.attachment img,
+.attachment video,
+img.attachment__img,
+video.attachment__video {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin: 10px 0;
+}
+
+/* Ensure the attachment container allows full width */
+.attachment-viewer,
+.attachment,
+.attachment__content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 10px 0;
+}
+
+/* Make the attachment section wider */
+.attachment-viewer__content,
+.attachment__content-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Full width for the test case body and attachment rows */
+.test-result__content,
+.test-result__attachments {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Allure 2.x specific overrides */
+.side-nav + .content .pane__body {
+    max-width: 100% !important;
+}
+
+.pane__section .attachment-row img,
+.pane__section .attachment-row video {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* Allure 3.x / allure-playwright specific */
+.attachments-list .attachment-row {
+    width: 100% !important;
+}
+
+.attachments-list .attachment-row img,
+.attachments-list .attachment-row video {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}

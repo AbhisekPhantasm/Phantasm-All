@@ -1,0 +1,23 @@
+{
+  "name": "krc-playwright-tests",
+  "version": "1.0.0",
+  "description": "Playwright TypeScript automation for KRC College website",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:ui": "npx playwright test --ui",
+    "test:report": "npx playwright show-report --host 127.0.0.1 --port 9324",
+    "test:chromium": "npx playwright test --project=chromium",
+    "test:mobile": "npx playwright test --project=mobile-chrome",
+    "allure:generate": "npx allure generate ./allure-results --clean",
+    "allure:open": "npx allure open ./allure-report",
+    "allure:report": "npm run allure:generate && npm run allure:open"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^20.0.0",
+    "allure-commandline": "^2.38.1",
+    "allure-playwright": "^3.7.1",
+    "typescript": "^5.0.0"
+  }
+}

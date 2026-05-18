@@ -1,0 +1,8 @@
+Step: Navigating to About Us page
+Step: Clicking Contact Us
+Action: Clicked Contact Us link
+Action: Attached screenshot about-contact-us.png to Allure report
+Step: Navigating back to About Us
+Step: Clicking Explore Our Services
+Action: Clicked Explore Our Services link
+Action: Attached screenshot about-services.png to Allure report

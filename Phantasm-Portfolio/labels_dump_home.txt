@@ -1,0 +1,12 @@
+CLASS: elementor-heading-title elementor-size-default TEXT: Our Services
+CLASS: elementor-heading-title elementor-size-default TEXT: Case Studies
+CLASS: elementor-heading-title elementor-size-default TEXT: Blogs
+CLASS: elementor-heading-title elementor-size-default TEXT: Connect with Us
+CLASS: gt3-core-imagebox-title TEXT: Expertise Across Multifaceted Services
+CLASS: gt3-core-imagebox-title TEXT: Expertise Across Multifaceted Services
+CLASS: gt3-core-imagebox-title TEXT: Proven Track Record of Delivering Results
+CLASS: gt3-core-imagebox-title TEXT: Proven Track Record of Delivering Results
+CLASS: gt3-core-imagebox-title TEXT: Tailored Strategies for Post-Pandemic Success
+CLASS: gt3-core-imagebox-title TEXT: Tailored Strategies for Post-Pandemic Success
+CLASS: gt3-core-imagebox-title TEXT: Client-Centric Approach
+CLASS: gt3-core-imagebox-title TEXT: Client-Centric Approach

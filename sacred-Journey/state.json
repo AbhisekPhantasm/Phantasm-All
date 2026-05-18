@@ -1,0 +1,43 @@
+{
+  "cookies": [
+    {
+      "name": "uat",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQzLCJlbWFpbCI6ImFiaGlzZWtAcGhhbnRhc20uY28uaW4iLCJyb2xlIjoiY3VzdG9tZXIiLCJiMmJraW5nX2IyYnVzZXIiOiJubyIsImlhdCI6MTc3NzU1NjM4NSwiZXhwIjoxNzc3NjQyNzg1fQ.jqkMbZtO8OzFhoajsraH3y6_6_fkxovU6NLjg8wVNLk",
+      "domain": "31.97.61.59",
+      "path": "/",
+      "expires": 1777642780,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "account",
+      "value": "{%22ID%22:243%2C%22user_email%22:%22abhisek@phantasm.co.in%22%2C%22user_nicename%22:%22abhisek%22%2C%22user_login%22:%22abhisek%22%2C%22display_name%22:%22Abhisek%20Test%22%2C%22user_url%22:%22%22%2C%22user_activation_key%22:%22eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQzLCJlbWFpbCI6ImFiaGlzZWtAcGhhbnRhc20uY28uaW4iLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3NzA2NTA4MDAsImV4cCI6MTc3MDY1NDQwMH0.7tGwB2LLjjJas4OHz2pji_gXV3AsJH5_yy0PsrS7P44%22%2C%22user_status%22:0%2C%22user_registered%22:%222026-02-05T10:02:23.000Z%22%2C%22first_name%22:%22Abhisek%22%2C%22last_name%22:%22Test%22%2C%22phone%22:%221010101010%22%2C%22b2bking_registration_role%22:%22role_1890%22%2C%22b2bking_b2buser%22:%22no%22%2C%22user_source%22:%22sacred_retail%22}",
+      "domain": "31.97.61.59",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://31.97.61.59:7004",
+      "localStorage": [
+        {
+          "name": "cartOpen",
+          "value": "false"
+        },
+        {
+          "name": "account",
+          "value": "{\"success\":true,\"message\":\"User login successfully\",\"data\":{\"ID\":243,\"user_email\":\"abhisek@phantasm.co.in\",\"user_nicename\":\"abhisek\",\"user_login\":\"abhisek\",\"display_name\":\"Abhisek Test\",\"user_url\":\"\",\"user_activation_key\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQzLCJlbWFpbCI6ImFiaGlzZWtAcGhhbnRhc20uY28uaW4iLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3NzA2NTA4MDAsImV4cCI6MTc3MDY1NDQwMH0.7tGwB2LLjjJas4OHz2pji_gXV3AsJH5_yy0PsrS7P44\",\"user_status\":0,\"user_registered\":\"2026-02-05T10:02:23.000Z\",\"first_name\":\"Abhisek\",\"last_name\":\"Test\",\"phone\":\"1010101010\",\"b2bking_registration_role\":\"role_1890\",\"b2bking_b2buser\":\"no\",\"user_source\":\"sacred_retail\"},\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjQzLCJlbWFpbCI6ImFiaGlzZWtAcGhhbnRhc20uY28uaW4iLCJyb2xlIjoiY3VzdG9tZXIiLCJiMmJraW5nX2IyYnVzZXIiOiJubyIsImlhdCI6MTc3NzU1NjM4NSwiZXhwIjoxNzc3NjQyNzg1fQ.jqkMbZtO8OzFhoajsraH3y6_6_fkxovU6NLjg8wVNLk\"}"
+        },
+        {
+          "name": "cart",
+          "value": "{\"status\":true,\"data\":{\"cartItems\":[]}}"
+        }
+      ]
+    }
+  ]
+}

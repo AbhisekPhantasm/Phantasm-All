@@ -1,0 +1,3 @@
+Step: Navigating to Services page
+Step: Hovering over Services menu in header
+Step: Clicking API Synthesis from dropdown

@@ -1,0 +1,58 @@
+{
+  "cookies": [
+    {
+      "name": "rzp_unified_session_id",
+      "value": "Sm4OMahZhWiGQ6",
+      "domain": "31.97.61.59",
+      "path": "/",
+      "expires": 1778070418,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "sabeel_token",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzE0LCJlbWFpbCI6InRoaXNpc3ZhbXNpOUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRSIsImZpcnN0TmFtZSI6IlZhbXNpIiwibGFzdE5hbWUiOiJLcmlzaG5hIiwiaWF0IjoxNzc4MDY4NjIwLCJleHAiOjE3Nzg2NzM0MjB9._VN401TTvoyzzCQFflAfx5YlYYz-5pf4LosqseIoz5A",
+      "domain": "31.97.61.59",
+      "path": "/",
+      "expires": 1778673420.427309,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "sabeel_user",
+      "value": "%7B%22id%22%3A314%2C%22firstName%22%3A%22Vamsi%22%2C%22lastName%22%3A%22Krishna%22%2C%22email%22%3A%22thisisvamsi9%40gmail.com%22%2C%22phone%22%3A%221234567891%22%2C%22profilePicture%22%3Anull%2C%22role%22%3A%22USER%22%2C%22status%22%3A%22ACTIVE%22%2C%22isDeleted%22%3Afalse%2C%22age%22%3A%2222%22%2C%22city%22%3A%22Gjhsdcb%22%2C%22qualification%22%3A%22btec%20h%22%2C%22state%22%3A%22sdjhvcb%22%2C%22verifyToken%22%3A%22eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzE0LCJlbWFpbCI6InRoaXNpc3ZhbXNpOUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsInN0YXR1cyI6IkFDVElWRSIsImZpcnN0TmFtZSI6IlZhbXNpIiwibGFzdE5hbWUiOiJLcmlzaG5hIiwiaWF0IjoxNzcwMTI2MzcwLCJleHAiOjE3NzAxMjY5NzB9.NW8g7q5CVB5RbwM3ehBCI-XwjV8bXBM8yWO-S_oYdig%22%2C%22refreshToken%22%3A%22eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzE0LCJlbWFpbCI6InRoaXNpc3ZhbXNpOUBnbWFpbC5jb20iLCJyb2xlIjoiVVNFUiIsImlhdCI6MTc3ODA2MjIzMSwiZXhwIjoxNzc4NjY3MDMxfQ.-oX-kbgZsslVzzIa6T4IgcEoDuU0DIFbLUD9fTsXdME%22%2C%22createdAt%22%3A%222026-02-03T13%3A46%3A10.000Z%22%2C%22updatedAt%22%3A%222026-05-06T10%3A10%3A31.000Z%22%7D",
+      "domain": "31.97.61.59",
+      "path": "/",
+      "expires": 1778673420.427412,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://31.97.61.59:3010",
+      "localStorage": [
+        {
+          "name": "rzp_device_id",
+          "value": "1.b68ce1e6118c5aa892dc562158ff44b37caff373.1778068618729.73747503"
+        },
+        {
+          "name": "rzp_checkout_anon_id",
+          "value": "44933fec1b454b9f9ff2e33da5bc873b"
+        }
+      ]
+    },
+    {
+      "origin": "https://api.razorpay.com",
+      "localStorage": [
+        {
+          "name": "rzp_device_id",
+          "value": "1.b68ce1e6118c5aa892dc562158ff44b37caff373.1778068619016.31397224"
+        }
+      ]
+    }
+  ]
+}

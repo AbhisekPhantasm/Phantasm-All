@@ -1,0 +1,11 @@
+✅ Home page loaded
+✅ Industries page loaded
+✅ Page content visible after scroll
+✅ Explore Our Capabilities page opened
+✅ Navigated back to Industries
+✅ Scrolled down to lower sections
+✅ Start a Conversation page opened
+✅ Navigated back
+✅ Page bottom content validated
+✅ Scrolled back to top
+✅ Flow completed – Title: "Industries We Serve | Pharma, Biotech & Research Chemistry Support"

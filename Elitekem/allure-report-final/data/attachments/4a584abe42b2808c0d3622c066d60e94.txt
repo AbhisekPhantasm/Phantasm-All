@@ -1,0 +1,15 @@
+✅ Contact Us page loaded
+✅ Header and navigation visible
+✅ Contact information visible
+✅ Form section scrolled into view
+✅ Name field filled
+✅ Email field filled
+✅ Subject field filled
+✅ Phone field filled
+✅ Message field filled
+✅ All form fields filled – ready to submit
+✅ Submit button clicked
+✅ SUCCESS: "Thank you for your message. It has been sent."
+✅ Full success state visible
+✅ Footer visible
+✅ Contact form flow completed

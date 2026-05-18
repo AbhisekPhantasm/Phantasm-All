@@ -1,0 +1,27 @@
+{
+  "name": "sabeeltv",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "home-test": "playwright test test/home.spec.ts",
+    "about-test": "playwright test test/about.spec.ts",
+    "contact-test": "playwright test test/contact.spec.ts",
+    "allure:generate": "allure generate allure-results --clean -o allure-report",
+    "allure:open": "allure open allure-report",
+    "allure:serve": "allure serve allure-results",
+    "test": "playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.6.0",
+    "allure-commandline": "^2.38.1",
+    "allure-js-commons": "^3.7.1",
+    "allure-playwright": "^3.7.1",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}
