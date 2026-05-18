@@ -5,6 +5,7 @@ services:
       dockerfile: docker/jenkins/Dockerfile
     image: qa-hub/jenkins:lts
     container_name: qa-hub-jenkins
+    user: root
     restart: unless-stopped
     ports:
       - "8080:8080"
