@@ -1,0 +1,152 @@
+#!/usr/bin/env groovy
+/* groovylint-disable CompileStatic, UnnecessaryGetter */
+// Scripted pipeline: SCM at Phantasm root (qa-automation-hub/ + sibling projects) OR hub-only checkout.
+
+def hubDir() {
+  return fileExists('qa-automation-hub/package.json') ? 'qa-automation-hub' : '.'
+}
+
+def allProjectIds() {
+  return [
+    'example-acme-ui',
+    'amipro-simpor-b2c',
+    'elitekem',
+    'flavor-boys',
+    'krc-collage',
+    'no-limits-distributions',
+    'phantasm-portfolio',
+    'sabeeltv',
+    'sacred-journey',
+    'ushodaya',
+  ].join('\n')
+}
+
+properties([
+  parameters([
+    choice(name: 'PROJECT_ID', choices: allProjectIds(), description: 'Must exist in tooling/projects.registry.json'),
+    choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'].join('\n')),
+    choice(name: 'BROWSER', choices: ['chromium', 'firefox', 'webkit'].join('\n')),
+    string(name: 'TAGS', defaultValue: '', trim: true),
+    booleanParam(name: 'HEADED', defaultValue: false),
+    string(name: 'PW_WORKERS', defaultValue: '4', trim: true),
+    string(name: 'SHARD_INDEX', defaultValue: '', trim: true),
+    string(name: 'SHARD_TOTAL', defaultValue: '', trim: true),
+  ]),
+])
+
+node('docker') {
+  stage('Checkout') {
+    checkout scm
+  }
+
+  def hub = hubDir()
+  env.HUB_DIR = hub
+  env.PHANTASM_MONO_ROOT = pwd()
+
+  def dockerfile = "${hub}/docker/playwright-runner/Dockerfile"
+  def image = docker.build("qa-hub/playwright-runner:${env.BUILD_NUMBER}", "-f ${dockerfile} ${hub}")
+
+  def testRc = null
+  Throwable pipelineError = null
+
+  try {
+    try {
+      image.inside {
+        dir(hub) {
+          stage('Validate registry') {
+            sh 'node tooling/validate-registry.mjs'
+          }
+
+          stage('Run Playwright (hub script)') {
+            testRc = sh(returnStatus: true, script: """#!/usr/bin/env bash
+set -euo pipefail
+export PHANTASM_MONO_ROOT="${env.PHANTASM_MONO_ROOT}"
+export PROJECT_ID="${params.PROJECT_ID}"
+export ENVIRONMENT="${params.ENVIRONMENT}"
+export BROWSER="${params.BROWSER}"
+export TAGS="${params.TAGS}"
+export PW_WORKERS="${params.PW_WORKERS}"
+export SHARD_INDEX="${params.SHARD_INDEX}"
+export SHARD_TOTAL="${params.SHARD_TOTAL}"
+export HEADED="$([[ "${params.HEADED}" == "true" ]] && echo 1 || echo 0)"
+bash scripts/run-project.sh
+""")
+          }
+        }
+      }
+    } catch (Throwable t) {
+      pipelineError = t
+    }
+  } finally {
+    dir(hub) {
+      stage('Collect artifacts') {
+        sh """#!/usr/bin/env bash
+set -euo pipefail
+export PROJECT_ID="${params.PROJECT_ID}"
+export BUILD_TAG="${env.BUILD_TAG}"
+bash scripts/collect-artifacts.sh
+"""
+      }
+
+      stage('Publish Allure') {
+        if (fileExists('qa-hub-last-run.env')) {
+          def props = readProperties file: 'qa-hub-last-run.env'
+          env.LAST_PROJECT_PATH = props.PROJECT_PATH
+          if (env.LAST_PROJECT_PATH?.trim()) {
+            try {
+              allure([
+                includeProperties: false,
+                jdk: '',
+                properties: [],
+                reportBuildPolicy: 'ALWAYS',
+                results: [[path: "${env.LAST_PROJECT_PATH}/allure-results"]],
+              ])
+            } catch (err) {
+              echo "Allure publish skipped/failed: ${err}"
+            }
+          }
+        } else {
+          echo 'No qa-hub-last-run.env; skipping Allure.'
+        }
+      }
+
+      stage('Archive') {
+        archiveArtifacts artifacts: 'artifacts/**,qa-hub-last-run.env', fingerprint: true, allowEmptyArchive: true
+      }
+    }
+
+    if (env.SLACK_WEBHOOK_URL?.trim()) {
+      dir(hub) {
+        if (testRc == null) {
+          sh """#!/usr/bin/env bash
+set -euo pipefail
+export MESSAGE="❌ ${env.JOB_NAME} #${env.BUILD_NUMBER} FAILED (before Playwright run) (${params.PROJECT_ID})"
+bash scripts/notify-slack.sh
+"""
+        } else if (testRc == 0) {
+          sh """#!/usr/bin/env bash
+set -euo pipefail
+export MESSAGE="✅ ${env.JOB_NAME} #${env.BUILD_NUMBER} SUCCESS (${params.PROJECT_ID})"
+bash scripts/notify-slack.sh
+"""
+        } else {
+          sh """#!/usr/bin/env bash
+set -euo pipefail
+export MESSAGE="❌ ${env.JOB_NAME} #${env.BUILD_NUMBER} FAILED (${params.PROJECT_ID})"
+bash scripts/notify-slack.sh
+"""
+        }
+      }
+    }
+
+    if (testRc != null && testRc != 0) {
+      currentBuild.result = 'FAILURE'
+      error("Playwright exited with code ${testRc}")
+    }
+
+    if (pipelineError != null) {
+      currentBuild.result = 'FAILURE'
+      throw pipelineError
+    }
+  }
+}

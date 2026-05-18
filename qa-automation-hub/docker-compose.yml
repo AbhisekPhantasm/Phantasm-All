@@ -1,0 +1,74 @@
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: docker/jenkins/Dockerfile
+    image: qa-hub/jenkins:lts
+    container_name: qa-hub-jenkins
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    environment:
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false -Xmx2048m"
+      # Optional: pre-seed admin user via CasC in production (not enabled in this sample).
+    volumes:
+      # Persist Jenkins data (jobs, plugins, credentials metadata) outside the container.
+      - jenkins_home:/var/jenkins_home
+      # Optional local-dev bind mount of the monorepo into the controller (rw for tooling).
+      - ./:/repo:rw
+      # Docker-outside-of-Docker: reuse host Docker Engine from inside Jenkins.
+      - /var/run/docker.sock:/var/run/docker.sock
+    group_add:
+      # Match host docker group gid when possible; override if your host differs.
+      - "999"
+
+  # Build the Playwright runner image once (optional helper service).
+  playwright-runner:
+    build:
+      context: .
+      dockerfile: docker/playwright-runner/Dockerfile
+    image: qa-hub/playwright-runner:1.59.1
+    profiles: ["build-images"]
+
+  # Run hub tests inside the same OS image Jenkins uses (Linux / Docker Desktop / WSL).
+  # From this folder: docker compose --profile ci run --rm -e PROJECT_ID=flavor-boys playwright-ci bash scripts/run-project.sh
+  # Optional: -e PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 when Playwright version matches the image exactly.
+  playwright-ci:
+    image: mcr.microsoft.com/playwright:v1.59.1-jammy
+    profiles: ["ci"]
+    working_dir: /mono/qa-automation-hub
+    environment:
+      PHANTASM_MONO_ROOT: /mono
+      CI: "true"
+      NODE_ENV: test
+    volumes:
+      - ../:/mono
+
+  # Headed Playwright + Xvfb + noVNC. Starts with default `docker compose up` alongside Jenkins.
+  # Viewer: http://127.0.0.1:6080/vnc.html  (or http://127.0.0.1:6080/novnc/vnc.html)
+  # One project: docker compose exec playwright-vnc bash -lc "cd /mono/qa-automation-hub && PHANTASM_MONO_ROOT=/mono HEADED=1 PROJECT_ID=flavor-boys bash scripts/run-project.sh"
+  # All projects (host): bash scripts/run-all-projects-vnc.sh  |  PowerShell: .\scripts\run-all-projects-vnc.ps1
+  playwright-vnc:
+    build:
+      context: .
+      dockerfile: docker/playwright-vnc/Dockerfile
+    image: qa-hub/playwright-vnc:1.59.1
+    container_name: qa-hub-playwright-vnc
+    ports:
+      - "127.0.0.1:6080:6080"
+      - "127.0.0.1:5900:5900"
+    environment:
+      PHANTASM_MONO_ROOT: /mono
+      DISPLAY: ":99"
+    volumes:
+      - ../:/mono
+    working_dir: /mono/qa-automation-hub
+    tty: true
+
+volumes:
+  jenkins_home:
+    name: qa_hub_jenkins_home
+  # Optional: central artifact cache (attach to runner in advanced setups)
+  qa_hub_artifacts:
+    name: qa_hub_artifacts

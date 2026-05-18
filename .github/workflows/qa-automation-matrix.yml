@@ -1,0 +1,88 @@
+name: QA Automation Hub (Phantasm mono)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+
+concurrency:
+  group: qa-hub-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  matrix:
+    name: ${{ matrix.project_id }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        project_id:
+          - example-acme-ui
+          - amipro-simpor-b2c
+          - elitekem
+          - flavor-boys
+          - krc-collage
+          - no-limits-distributions
+          - phantasm-portfolio
+          - sabeeltv
+          - sacred-journey
+          - ushodaya
+
+    steps:
+      - name: Checkout Phantasm mono root
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: |
+            qa-automation-hub/package-lock.json
+            Amipro-Simpor-B2C/package-lock.json
+            Elitekem/package-lock.json
+            Flavor-Boys/package-lock.json
+            KRC_Collage/package-lock.json
+            No-Limits-Distributions/package-lock.json
+            Phantasm-Portfolio/package-lock.json
+            SabeelTv/package-lock.json
+            sacred-Journey/package-lock.json
+            Ushodaya/package-lock.json
+
+      - name: Validate registry
+        working-directory: qa-automation-hub
+        env:
+          PHANTASM_MONO_ROOT: ${{ github.workspace }}
+        run: node tooling/validate-registry.mjs
+
+      - name: Run Playwright project
+        working-directory: qa-automation-hub
+        env:
+          PHANTASM_MONO_ROOT: ${{ github.workspace }}
+          PROJECT_ID: ${{ matrix.project_id }}
+          ENVIRONMENT: dev
+          CI: 'true'
+          HEADED: '0'
+        run: bash scripts/run-project.sh
+
+      - name: Collect artifacts
+        if: always()
+        working-directory: qa-automation-hub
+        env:
+          PHANTASM_MONO_ROOT: ${{ github.workspace }}
+          PROJECT_ID: ${{ matrix.project_id }}
+          BUILD_TAG: gha-${{ github.run_id }}-${{ matrix.project_id }}
+        run: bash scripts/collect-artifacts.sh
+
+      - name: Upload artifacts (Playwright + Allure raw)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.project_id }}-${{ github.run_id }}
+          if-no-files-found: ignore
+          path: |
+            qa-automation-hub/artifacts/**
+            qa-automation-hub/qa-hub-last-run.env

@@ -1,0 +1,24 @@
+{
+  "name": "qa-automation-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Centralized Playwright + TypeScript automation monorepo",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "install:all": "npm install",
+    "build:shared": "npm run build -w @qa-hub/shared-core -w @qa-hub/playwright-framework",
+    "test:example": "npm run test -w @qa-hub/example-acme-ui",
+    "allure:serve": "allure serve projects/example-acme-ui/allure-results",
+    "registry:validate": "node tooling/validate-registry.mjs"
+  },
+  "workspaces": [
+    "packages/*",
+    "projects/*"
+  ],
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.2"
+  }
+}

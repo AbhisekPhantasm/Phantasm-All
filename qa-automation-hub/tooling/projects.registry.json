@@ -1,0 +1,92 @@
+{
+  "$schema": "./projects.registry.schema.json",
+  "version": 1,
+  "projects": [
+    {
+      "id": "example-acme-ui",
+      "displayName": "Example ACME UI (hub template)",
+      "repoPath": "qa-automation-hub/projects/example-acme-ui",
+      "workspacePackage": "@qa-hub/example-acme-ui",
+      "defaultTags": "",
+      "supportsApi": true,
+      "supportsUi": true
+    },
+    {
+      "id": "amipro-simpor-b2c",
+      "displayName": "Amipro Simpor B2C",
+      "repoPath": "Amipro-Simpor-B2C",
+      "defaultTags": "",
+      "supportsApi": false,
+      "supportsUi": true
+    },
+    {
+      "id": "elitekem",
+      "displayName": "Elitekem",
+      "repoPath": "Elitekem",
+      "defaultTags": "",
+      "supportsApi": false,
+      "supportsUi": true
+    },
+    {
+      "id": "flavor-boys",
+      "displayName": "Flavor Boys",
+      "repoPath": "Flavor-Boys",
+      "defaultTags": "",
+      "supportsApi": false,
+      "supportsUi": true
+    },
+    {
+      "id": "krc-collage",
+      "displayName": "KRC Collage",
+      "repoPath": "KRC_Collage",
+      "defaultTags": "",
+      "supportsApi": false,
+      "supportsUi": true
+    },
+    {
+      "id": "no-limits-distributions",
+      "displayName": "No Limits Distributions",
+      "repoPath": "No-Limits-Distributions",
+      "defaultTags": "",
+      "supportsApi": false,
+      "supportsUi": true
+    },
+    {
+      "id": "phantasm-portfolio",
+      "displayName": "Phantasm Portfolio",
+      "repoPath": "Phantasm-Portfolio",
+      "defaultTags": "",
+      "supportsApi": false,
+      "supportsUi": true
+    },
+    {
+      "id": "sabeeltv",
+      "displayName": "Sabeel TV",
+      "repoPath": "SabeelTv",
+      "defaultTags": "",
+      "supportsApi": false,
+      "supportsUi": true
+    },
+    {
+      "id": "sacred-journey",
+      "displayName": "Sacred Journey",
+      "repoPath": "sacred-Journey",
+      "defaultTags": "",
+      "supportsApi": false,
+      "supportsUi": true
+    },
+    {
+      "id": "ushodaya",
+      "displayName": "Ushodaya",
+      "repoPath": "Ushodaya",
+      "defaultTags": "",
+      "supportsApi": false,
+      "supportsUi": true
+    }
+  ],
+  "environments": [
+    { "id": "dev", "baseUrl": "https://example.dev" },
+    { "id": "staging", "baseUrl": "https://example.org" },
+    { "id": "prod", "baseUrl": "https://example.com" }
+  ]
+}

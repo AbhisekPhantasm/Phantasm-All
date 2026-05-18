@@ -1,0 +1,12 @@
+allure-jenkins-plugin:latest
+ant:latest
+build-timeout:latest
+credentials-binding:latest
+docker-workflow:latest
+email-ext:latest
+git:latest
+pipeline-stage-view:latest
+pipeline-utility-steps:latest
+ssh-agent:latest
+timestamper:latest
+ws-cleanup:latest

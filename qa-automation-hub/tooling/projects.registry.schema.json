@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QA Hub project registry",
+  "type": "object",
+  "required": ["version", "projects", "environments"],
+  "properties": {
+    "version": { "type": "integer" },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "displayName", "repoPath"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "displayName": { "type": "string" },
+          "repoPath": {
+            "type": "string",
+            "description": "Path relative to PHANTASM_MONO_ROOT (folder that contains qa-automation-hub and sibling projects)."
+          },
+          "workspacePackage": { "type": "string" },
+          "defaultTags": { "type": "string" },
+          "supportsApi": { "type": "boolean" },
+          "supportsUi": { "type": "boolean" }
+        }
+      }
+    },
+    "environments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "baseUrl"],
+        "properties": {
+          "id": { "type": "string" },
+          "baseUrl": { "type": "string", "format": "uri" }
+        }
+      }
+    }
+  }
+}
